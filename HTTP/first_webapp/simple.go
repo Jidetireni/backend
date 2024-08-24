@@ -3,6 +3,8 @@ package main
 import (
 	"fmt"
 	"net/http"
+	"reflect"
+	"runtime"
 )
 
 // type MyHandler struct{}
@@ -30,6 +32,14 @@ func hello(w http.ResponseWriter, r *http.Request) {
 func world(w http.ResponseWriter, r *http.Request) {
 	fmt.Fprintf(w, "World")
 }
+
+func log(h http.HandlerFunc) http.HandlerFunc {
+	return func(w http.ResponseWriter, r *http.Request) {
+		name := runtime.FuncForPC(reflect.ValueOf(h).Pointer()).Name()
+		fmt.Println("Handler function called - " + name)
+		h(w, r)
+	}
+}
 func main() {
 
 	//handler := MyHandler{}
@@ -41,7 +51,7 @@ func main() {
 	}
 	// http.Handle("/hello", &hello)
 	// http.Handle("/world", &world)
-	http.HandleFunc("/hello", hello)
+	http.HandleFunc("/hello", log(hello))
 	http.HandleFunc("/world", world)
 
 	server.ListenAndServe()
