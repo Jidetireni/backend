@@ -14,7 +14,7 @@ func greet(w http.ResponseWriter, r *http.Request, p httprouter.Params) {
 func main() {
 
 	mux := httprouter.New()
-	mux.GET("/hello:name", greet)
+	mux.GET("/hello/:name", greet)
 
 	server := http.Server{
 		Addr:    "127.0.0.1:8080",
