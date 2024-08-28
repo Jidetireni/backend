@@ -37,8 +37,13 @@ func setCookie(w http.ResponseWriter, r *http.Request) {
 }
 
 func getcookie(w http.ResponseWriter, r *http.Request) {
-	h := r.Header["cookie"]
-	fmt.Fprintln(w, h)
+	c1, err := r.Cookie("first_cookie")
+	if err != nil {
+		fmt.Fprintln(w, "cannot get the first cookie")
+	}
+	cs := r.Cookies()
+	fmt.Fprintln(w, c1)
+	fmt.Fprintln(w, cs)
 }
 
 func main() {
